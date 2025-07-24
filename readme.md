@@ -19,7 +19,10 @@ For User:
 
 **Problem**: We need to show users how much of the survey they still need to complete.
 
-**Solution**: This is a one-time calculation that happens when publishing the survey. Since we know the depth at each question level, we calculate this on the frontend side while publishing the survey and then store it in S3.
+**Solution**: This involves two types of calculations:
+1. **Pre-computed during publishing**: The longest possible path remaining from each question is calculated once when publishing the survey and stored in S3.
+2. **Runtime calculation**: How much progress the user has made (how much they have traveled) is computed in real-time as they fill out the form.
+3. **Progress formula**: For each question, we show the user: `longestPathRemaining / (longestPathRemaining + howMuchTheyTraveled)` to display their completion percentage.
 
 Here is the algorithm that helps us compute the completion percentage:
 
