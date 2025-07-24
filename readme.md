@@ -50,7 +50,7 @@ public class DynamicSurvey {
 
         question2.setOption(new Options(21, "Get the question", null));
         question2.setOption(new Options(22, "Get the question", question4));
-        question2.setOption(new Options(12, "Get the question", question2));
+        question2.setOption(new Options(23, "Get the question", question2));
 
         question3.setOption(new Options(31, "Get the question first", question5));
         question5.setOption(new Options(33, "Choose this one", null));
@@ -61,15 +61,18 @@ public class DynamicSurvey {
     public int findTheLengthOfThePaths(Question question, int startFromTop) {
         if (question == null) return 0;
 
+        if (question.getHeight() != -1) return question.getHeight();
+
         int maximum = 0;
 
         for (Options options : question.options) {
             maximum = Math.max(findTheLengthOfThePaths(options.getToQuestion(), startFromTop + 1), maximum);
         }
 
-        question.setPerToComplete((double) (maximum * 100) / (maximum + startFromTop));
+        question.setHeight(maximum + 1);
+        
 
-        return maximum + 1;
+        return question.getHeight();
     }
 }
 
@@ -78,6 +81,7 @@ class Question {
     String description;
     List<Options> options;
     double perToComplete;
+    int height;
 
     public double getPerToComplete() {
         return perToComplete;
@@ -87,6 +91,14 @@ class Question {
         this.perToComplete = perToComplete;
     }
 
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     Question(int id, String description, List<Options> options) {
         this.id = id;
         this.description = description;
@@ -94,6 +106,7 @@ class Question {
         if (options == null) {
             this.options = new ArrayList<>();
         }
+        this.height = -1;  
     }
 
     public String getDescription() {
